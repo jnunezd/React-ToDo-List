@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import { isContext } from "vm";
 
 //create your first component
 
@@ -14,11 +13,10 @@ export function Home() {
 		"Vestibulum at eros"
 	]);
 
-	const [newMessage, setNewMessage] = useState("");
-
 	function addMessage(e) {
 		if (e.target.value != "" && e.keyCode == 13) {
-			setMessage(message.concat(e.target.value));
+			let mess = message.concat(e.target.value);
+			setMessage(mess);
 			e.target.value = "";
 		}
 	}
@@ -28,6 +26,28 @@ export function Home() {
 		mess.splice(i, 1);
 		setMessage(mess);
 	}
+
+	function showDelete(i) {
+		let icon = document.querySelector("#item" + i);
+		icon.classList.remove("hide");
+	}
+
+	function hideDelete(i) {
+		let icon = document.querySelector("#item" + i);
+		icon.classList.add("hide");
+	}
+
+	// function getTodos() {
+	// 	fetch("https://jsonplaceholder.typicode.com/todos/")
+	// 		.then(response => response.json())
+	// 		.then(json => {
+	// 			setMessage(json);
+	// 		});
+	// }
+
+	// useEffect(() => {
+	// 	getTodos();
+	// }, []);
 
 	return (
 		<div className="card">
@@ -45,10 +65,15 @@ export function Home() {
 					{message.length > 0 &&
 						message.map((item, i) => {
 							return (
-								<li key={i} class="list-group-item">
+								<li
+									key={i}
+									className="list-group-item"
+									onMouseOver={() => showDelete(i)}
+									onMouseOut={() => hideDelete(i)}>
 									{item}{" "}
 									<i
-										className="fa fa-trash float-right"
+										id={"item" + i}
+										className="fa fa-trash float-right hide"
 										onClick={() => deleteMessage(i)}
 									/>
 								</li>
